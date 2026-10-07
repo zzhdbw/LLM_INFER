@@ -1,0 +1,57 @@
+{
+  "model": "/home/models/Qwen/Qwen3-0.6B",
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "torch": "2.8.0+cu128",
+  "python": "3.11.11",
+  "platform": "Linux-5.15.0-140-generic-x86_64-with-glibc2.35",
+  "processor": "x86_64",
+  "parameters": 751632384,
+  "input_tokens": 13,
+  "max_new_tokens": 8,
+  "temperature": 0.0,
+  "top_k": 50,
+  "top_p": 0.9,
+  "warmup_runs": 1,
+  "ignore_eos": false,
+  "runs": [
+    {
+      "input_tokens": 13,
+      "generated_tokens": 8,
+      "total_s": 4.57139191031456,
+      "prefill_ms": 480.59891909360886,
+      "decode_avg_ms": 583.8763532893998,
+      "decode_tokens_per_s": 1.7126913846849134,
+      "overall_tokens_per_s": 1.7500140344452584,
+      "output": "你好！有什么可以帮助你的吗？"
+    },
+    {
+      "input_tokens": 13,
+      "generated_tokens": 8,
+      "total_s": 4.073363825678825,
+      "prefill_ms": 489.2594590783119,
+      "decode_avg_ms": 511.4709522042956,
+      "decode_tokens_per_s": 1.9551452446913788,
+      "overall_tokens_per_s": 1.96397875131294,
+      "output": "你好！有什么可以帮助你的吗？"
+    },
+    {
+      "input_tokens": 13,
+      "generated_tokens": 8,
+      "total_s": 3.468109220266342,
+      "prefill_ms": 389.68560844659805,
+      "decode_avg_ms": 439.30997380188535,
+      "decode_tokens_per_s": 2.276297055916531,
+      "overall_tokens_per_s": 2.306732427355797,
+      "output": "你好！有什么可以帮助你的吗？"
+    }
+  ],
+  "summary": {
+    "total_s": 4.0376216520865755,
+    "prefill_ms": 453.18132887283963,
+    "decode_avg_ms": 511.5524264318603,
+    "decode_tokens_per_s": 1.9813778950976078,
+    "overall_tokens_per_s": 2.006908404371332,
+    "generated_tokens": 8
+  }
+}

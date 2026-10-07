@@ -1,0 +1,37 @@
+{
+  "model": "/home/models/Qwen/Qwen3-0.6B",
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "torch": "2.8.0+cu128",
+  "python": "3.11.11",
+  "platform": "Linux-5.15.0-140-generic-x86_64-with-glibc2.35",
+  "processor": "x86_64",
+  "parameters": 751632384,
+  "input_tokens": 13,
+  "max_new_tokens": 32,
+  "temperature": 0.0,
+  "top_k": 50,
+  "top_p": 0.9,
+  "warmup_runs": 0,
+  "ignore_eos": true,
+  "runs": [
+    {
+      "input_tokens": 13,
+      "generated_tokens": 32,
+      "total_s": 22.033346578478813,
+      "prefill_ms": 466.0261496901512,
+      "decode_avg_ms": 693.8039004322021,
+      "decode_tokens_per_s": 1.4413294583340543,
+      "overall_tokens_per_s": 1.4523440588574124,
+      "output": "你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\n"
+    }
+  ],
+  "summary": {
+    "total_s": 22.033346578478813,
+    "prefill_ms": 466.0261496901512,
+    "decode_avg_ms": 693.8039004322021,
+    "decode_tokens_per_s": 1.4413294583340543,
+    "overall_tokens_per_s": 1.4523440588574124,
+    "generated_tokens": 32
+  }
+}
