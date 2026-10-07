@@ -6,32 +6,32 @@
   "python": "3.11.11",
   "platform": "Linux-5.15.0-140-generic-x86_64-with-glibc2.35",
   "processor": "x86_64",
-  "parameters": 751632384,
+  "parameters": 596049920,
   "input_tokens": 13,
   "max_new_tokens": 32,
   "temperature": 0.0,
-  "top_k": 50,
-  "top_p": 0.9,
-  "warmup_runs": 0,
+  "top_k": -1,
+  "top_p": 1.0,
   "ignore_eos": true,
+  "warmup_runs": 0,
   "runs": [
     {
       "input_tokens": 13,
       "generated_tokens": 32,
-      "total_s": 22.033346578478813,
-      "prefill_ms": 466.0261496901512,
-      "decode_avg_ms": 693.8039004322021,
-      "decode_tokens_per_s": 1.4413294583340543,
-      "overall_tokens_per_s": 1.4523440588574124,
+      "total_s": 17.420534193515778,
+      "prefill_ms": 332.57701992988586,
+      "decode_avg_ms": 549.2310648964296,
+      "decode_tokens_per_s": 1.82072731117016,
+      "overall_tokens_per_s": 1.836912671249252,
       "output": "你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\n"
     }
   ],
   "summary": {
-    "total_s": 22.033346578478813,
-    "prefill_ms": 466.0261496901512,
-    "decode_avg_ms": 693.8039004322021,
-    "decode_tokens_per_s": 1.4413294583340543,
-    "overall_tokens_per_s": 1.4523440588574124,
+    "total_s": 17.420534193515778,
+    "prefill_ms": 332.57701992988586,
+    "decode_avg_ms": 549.2310648964296,
+    "decode_tokens_per_s": 1.82072731117016,
+    "overall_tokens_per_s": 1.836912671249252,
     "generated_tokens": 32
   }
 }

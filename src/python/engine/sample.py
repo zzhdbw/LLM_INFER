@@ -18,10 +18,21 @@ class Sampler:
             return logits.argmax(dim=-1, keepdim=True)
 
         logits = logits / self.sampling_params.temperature
+
         if self.sampling_params.top_k > 0:
             topk_vals = torch.topk(
                 logits, min(self.sampling_params.top_k, logits.size(-1))
             ).values
             logits = logits.masked_fill(logits < topk_vals[..., -1:], float("-inf"))
+
+        if self.sampling_params.top_p < 1.0:
+            sorted_logits, sorted_idx = torch.sort(logits, descending=True)
+            cumprobs = torch.cumsum(F.softmax(sorted_logits, dim=-1), dim=-1)
+            mask = cumprobs > self.sampling_params.top_p
+            mask[..., 1:] = mask[..., :-1].clone()
+            mask[..., 0] = False
+            remove = mask.scatter(-1, sorted_idx, mask)
+            logits = logits.masked_fill(remove, float("-inf"))
+
         probs = F.softmax(logits, dim=-1)
         return torch.multinomial(probs, num_samples=1)

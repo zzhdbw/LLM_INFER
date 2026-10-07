@@ -6,52 +6,52 @@
   "python": "3.11.11",
   "platform": "Linux-5.15.0-140-generic-x86_64-with-glibc2.35",
   "processor": "x86_64",
-  "parameters": 751632384,
+  "parameters": 596049920,
   "input_tokens": 13,
   "max_new_tokens": 128,
   "temperature": 0.0,
-  "top_k": 50,
-  "top_p": 0.9,
-  "warmup_runs": 1,
+  "top_k": -1,
+  "top_p": 1.0,
   "ignore_eos": true,
+  "warmup_runs": 1,
   "runs": [
     {
       "input_tokens": 13,
       "generated_tokens": 128,
-      "total_s": 4.0483343824744225,
-      "prefill_ms": 31.41064941883087,
-      "decode_avg_ms": 31.53505387503331,
-      "decode_tokens_per_s": 31.71074335128098,
-      "overall_tokens_per_s": 31.61794157965871,
-      "output": "你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好"
+      "total_s": 3.7241827845573425,
+      "prefill_ms": 28.330519795417786,
+      "decode_avg_ms": 29.011627527203146,
+      "decode_tokens_per_s": 34.46893832696344,
+      "overall_tokens_per_s": 34.36995641856341,
+      "output": "你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n"
     },
     {
       "input_tokens": 13,
       "generated_tokens": 128,
-      "total_s": 4.043663814663887,
-      "prefill_ms": 31.519174575805664,
-      "decode_avg_ms": 31.49508033681104,
-      "decode_tokens_per_s": 31.750990608879732,
-      "overall_tokens_per_s": 31.65446136640305,
-      "output": "你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好"
+      "total_s": 3.6549334600567818,
+      "prefill_ms": 28.605088591575623,
+      "decode_avg_ms": 28.478516368415413,
+      "decode_tokens_per_s": 35.11418878228738,
+      "overall_tokens_per_s": 35.0211574024145,
+      "output": "你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n"
     },
     {
       "input_tokens": 13,
       "generated_tokens": 128,
-      "total_s": 4.0344830974936485,
-      "prefill_ms": 31.22647851705551,
-      "decode_avg_ms": 31.42771975496623,
-      "decode_tokens_per_s": 31.819044073090264,
-      "overall_tokens_per_s": 31.72649306165584,
-      "output": "你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好"
+      "total_s": 3.6717232167720795,
+      "prefill_ms": 28.42842787504196,
+      "decode_avg_ms": 28.608973981357934,
+      "decode_tokens_per_s": 34.95406723259688,
+      "overall_tokens_per_s": 34.86101550773443,
+      "output": "你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n"
     }
   ],
   "summary": {
-    "total_s": 4.042160431543986,
-    "prefill_ms": 31.385434170564015,
-    "decode_avg_ms": 31.485951322270193,
-    "decode_tokens_per_s": 31.76025934441699,
-    "overall_tokens_per_s": 31.6662986692392,
+    "total_s": 3.683613153795401,
+    "prefill_ms": 28.45467875401179,
+    "decode_avg_ms": 28.699705958992165,
+    "decode_tokens_per_s": 34.84573144728257,
+    "overall_tokens_per_s": 34.75070977623745,
     "generated_tokens": 128
   }
 }
