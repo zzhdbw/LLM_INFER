@@ -170,11 +170,16 @@ LLM_INFER/
 
 Benchmark 结果详见 [docs/benchmark.md](docs/benchmark.md)。
 
-| 设备 | 生成长度 | dtype | Decode tok/s | Overall tok/s |
-|---|---:|---|---:|---:|
-| CPU | 8 | `torch.float32` | 2.79 | 2.89 |
-| CPU | 32 | `torch.float32` | 1.82 | 1.84 |
-| A100 `cuda:0` | 128 | `torch.bfloat16` | 34.85 | 34.75 |
+| 版本 | 设备 | 生成长度 | dtype | Decode tok/s | Overall tok/s |
+|---|---|---:|---|---:|---:|
+| v0.1 | CPU | 8 | `torch.float32` | 1.98 | 2.01 |
+| v0.1 | CPU | 32 | `torch.float32` | 1.44 | 1.45 |
+| v0.1 | A100 `cuda:0` | 128 | `torch.bfloat16` | 31.76 | 31.67 |
+| 当前 | CPU | 8 | `torch.float32` | 2.79 | 2.89 |
+| 当前 | CPU | 32 | `torch.float32` | 1.82 | 1.84 |
+| 当前 | A100 `cuda:0` | 128 | `torch.bfloat16` | 34.85 | 34.75 |
+
+> v0.1 为旧版单文件实现，参数量 751,632,384；当前版本为模块化实现并做了 weight tying，参数量 596,049,920。详细对比见 [docs/benchmark.md](docs/benchmark.md)。
 
 GPU 测试环境为 NVIDIA A100-SXM4-80GB，实际 benchmark 使用 `cuda:0`。
 
