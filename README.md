@@ -39,6 +39,26 @@ uv sync
 - PyTorch cu128 专用索引
 - `torch` / `torchvision` / `torchaudio` 从 PyTorch 官方 CUDA 索引安装
 
+## Pre-commit
+
+项目已配置 `.pre-commit-config.yaml`，提交前会自动执行：
+
+1. `ruff check --fix`
+2. `ruff format`
+
+首次使用：
+
+```bash
+uv sync
+uv run pre-commit install
+```
+
+手动运行：
+
+```bash
+uv run pre-commit run --all-files
+```
+
 ## 运行
 
 使用本地模型：

@@ -8,23 +8,15 @@ from pathlib import Path
 from typing import Any
 
 import torch
-from transformers import AutoConfig, AutoTokenizer
+from transformers import AutoTokenizer
 
 ROOT = Path(__file__).resolve().parent
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+for search_path in (ROOT, ROOT / "src"):
+    if str(search_path) not in sys.path:
+        sys.path.insert(0, str(search_path))
 
-from main import Qwen3ForCausalLM, generate, load_weights_from_hf
-
-
-def resolve_device(device: str | None) -> torch.device:
-    if device:
-        return torch.device(device)
-    if torch.cuda.is_available():
-        free = [torch.cuda.mem_get_info(i)[0] for i in range(torch.cuda.device_count())]
-        best = free.index(max(free))
-        return torch.device(f"cuda:{best}")
-    return torch.device("cpu")
+from main import generate, resolve_device, resolve_model_path
+from python.models import ModelConfig, Qwen3ForCausalLM, load_weights
 
 
 def synchronize(device: torch.device) -> None:
@@ -114,12 +106,13 @@ def main() -> None:
     args = parser.parse_args()
 
     device = resolve_device(args.device)
+    model_path = resolve_model_path(args.model)
     dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
 
     print("=" * 72)
     print("Qwen3 inference benchmark")
     print("=" * 72)
-    print(f"model        : {args.model}")
+    print(f"model        : {model_path}")
     print(f"device       : {device}")
     print(f"dtype        : {dtype}")
     print(f"torch        : {torch.__version__}")
@@ -131,13 +124,14 @@ def main() -> None:
     print(f"runs         : {args.runs}")
     print(f"ignore_eos   : {args.ignore_eos}")
 
-    config = AutoConfig.from_pretrained(args.model)
+    torch.set_default_dtype(dtype)
+    config = ModelConfig.from_json(str(model_path))
     model = Qwen3ForCausalLM(config)
-    num_params = sum(p.numel() for p in model.parameters())
-    load_weights_from_hf(model, args.model, device, dtype)
-    model.eval()
+    load_weights(model, str(model_path), device, dtype)
+    model.model._rotary_emb.set_device(device)
+    num_params = sum(p.numel() for p in model.state_dict().values())
 
-    tokenizer = AutoTokenizer.from_pretrained(args.model)
+    tokenizer = AutoTokenizer.from_pretrained(str(model_path))
     input_ids = build_inputs(tokenizer, args.prompt, device)
     eos_token_id = -1 if args.ignore_eos else tokenizer.eos_token_id
     print(f"parameters   : {num_params:,}")
@@ -208,7 +202,7 @@ def main() -> None:
 
     if args.json_out:
         payload = {
-            "model": args.model,
+            "model": str(model_path),
             "device": str(device),
             "dtype": str(dtype),
             "torch": torch.__version__,
