@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.python import LLM, SamplingParams
-from src.python.engine import DynamicKVCache, Sampler
+from src.python.engine import Sampler
 
 _DTYPE_MAP = {
     "bfloat16": torch.bfloat16,
@@ -61,10 +61,21 @@ def run_generate(
     sampling_params: SamplingParams,
     device: torch.device,
     use_kv_cache: bool,
+    max_seq_len: int,
 ) -> dict[str, Any]:
+    if input_ids.shape[1] + sampling_params.max_tokens > max_seq_len:
+        raise ValueError(
+            f"prompt length ({input_ids.shape[1]}) + max_tokens "
+            f"({sampling_params.max_tokens}) exceeds max_seq_len ({max_seq_len})"
+        )
+
     generated = input_ids.clone()
     model_input = input_ids
-    kv_cache = DynamicKVCache(llm.num_layers) if use_kv_cache else None
+    kv_cache = (
+        llm.create_kv_cache(max_seq_len=max_seq_len, batch_size=input_ids.shape[0])
+        if use_kv_cache
+        else None
+    )
     sampler = Sampler(sampling_params)
     step_times: list[float] = []
 
@@ -114,6 +125,7 @@ def run_generate(
         "decode_tokens_per_s": decode_tokens_per_s,
         "overall_tokens_per_s": generated_tokens / total_s if total_s > 0 else 0.0,
         "use_kv_cache": use_kv_cache,
+        "max_seq_len": max_seq_len,
         "output": output_text,
     }
 
@@ -133,6 +145,12 @@ def main() -> None:
     )
     parser.add_argument("--prompt", default="你好")
     parser.add_argument("--max-new-tokens", type=int, default=16)
+    parser.add_argument(
+        "--max-seq-len",
+        type=int,
+        default=4096,
+        help="预分配 KV cache 的最大序列长度",
+    )
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top-k", type=int, default=-1)
     parser.add_argument("--top-p", type=float, default=1.0)
@@ -174,6 +192,7 @@ def main() -> None:
     print(f"platform     : {platform.platform()}")
     print(f"processor    : {platform.processor()}")
     print(f"max_new_tokens: {args.max_new_tokens}")
+    print(f"max_seq_len   : {args.max_seq_len}")
     print(f"temperature  : {args.temperature}")
     print(f"top_k        : {args.top_k}")
     print(f"top_p        : {args.top_p}")
@@ -190,10 +209,24 @@ def main() -> None:
     print(f"input_tokens : {input_ids.shape[1]}")
 
     for _ in range(args.warmup_runs):
-        run_generate(llm, input_ids, sampling_params, device, args.use_kv_cache)
+        run_generate(
+            llm,
+            input_ids,
+            sampling_params,
+            device,
+            args.use_kv_cache,
+            args.max_seq_len,
+        )
 
     runs = [
-        run_generate(llm, input_ids, sampling_params, device, args.use_kv_cache)
+        run_generate(
+            llm,
+            input_ids,
+            sampling_params,
+            device,
+            args.use_kv_cache,
+            args.max_seq_len,
+        )
         for _ in range(args.runs)
     ]
 
@@ -220,6 +253,7 @@ def main() -> None:
         "decode_tokens_per_s": mean([run["decode_tokens_per_s"] for run in runs]),
         "overall_tokens_per_s": mean([run["overall_tokens_per_s"] for run in runs]),
         "use_kv_cache": args.use_kv_cache,
+        "max_seq_len": args.max_seq_len,
         "generated_tokens": mean([run["generated_tokens"] for run in runs]),
     }
 
@@ -252,6 +286,7 @@ def main() -> None:
             "top_p": args.top_p,
             "ignore_eos": args.ignore_eos,
             "use_kv_cache": args.use_kv_cache,
+            "max_seq_len": args.max_seq_len,
             "warmup_runs": args.warmup_runs,
             "runs": runs,
             "summary": summary,

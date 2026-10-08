@@ -1,0 +1,43 @@
+{
+  "model": "/mnt/afs/models/Qwen/Qwen3-0.6B",
+  "device": "cuda:0",
+  "dtype": "torch.bfloat16",
+  "torch": "2.8.0+cu128",
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-60-generic-x86_64-with-glibc2.35",
+  "processor": "x86_64",
+  "parameters": 596049920,
+  "input_tokens": 13,
+  "max_new_tokens": 1024,
+  "temperature": 0.0,
+  "top_k": -1,
+  "top_p": 1.0,
+  "ignore_eos": true,
+  "use_kv_cache": true,
+  "max_seq_len": 2048,
+  "warmup_runs": 0,
+  "runs": [
+    {
+      "input_tokens": 13,
+      "generated_tokens": 1024,
+      "total_s": 26.44475857540965,
+      "prefill_ms": 2538.9052629470825,
+      "decode_avg_ms": 23.293542780368092,
+      "decode_tokens_per_s": 42.93035239117017,
+      "overall_tokens_per_s": 38.722229098063806,
+      "use_kv_cache": true,
+      "max_seq_len": 2048,
+      "output": "你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n"
+    }
+  ],
+  "summary": {
+    "total_s": 26.44475857540965,
+    "prefill_ms": 2538.9052629470825,
+    "decode_avg_ms": 23.293542780368092,
+    "decode_tokens_per_s": 42.93035239117017,
+    "overall_tokens_per_s": 38.722229098063806,
+    "use_kv_cache": true,
+    "max_seq_len": 2048,
+    "generated_tokens": 1024
+  }
+}

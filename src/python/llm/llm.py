@@ -5,7 +5,7 @@ from huggingface_hub import snapshot_download
 from transformers import AutoConfig, AutoTokenizer
 
 from ..core import SamplingParams
-from ..engine import Sampler
+from ..engine import PreallocatedKVCache, Sampler
 from ..models import ModelConfig, create_model, load_weights
 
 
@@ -17,14 +17,32 @@ def _resolve_model_path(model_path: str) -> str:
 
 
 class LLM:
-    def __init__(self, model_path: str, dtype: torch.dtype = torch.bfloat16, **kwargs):
+    def __init__(
+        self,
+        model_path: str,
+        dtype: torch.dtype = torch.bfloat16,
+        max_seq_len: int = 4096,
+        **kwargs,
+    ):
         self.device = torch.device(kwargs.get("device", "cuda"))
         self.dtype = dtype
 
         model_path = _resolve_model_path(model_path)
         hf_config = AutoConfig.from_pretrained(model_path)
         config = ModelConfig.from_hf(hf_config)
+        if max_seq_len <= 0:
+            raise ValueError(f"max_seq_len must be positive, got {max_seq_len}")
+        if max_seq_len > config.max_position_embeddings:
+            raise ValueError(
+                f"max_seq_len ({max_seq_len}) exceeds model maximum "
+                f"position embeddings ({config.max_position_embeddings})"
+            )
+
+        self.config = config
+        self.max_seq_len = max_seq_len
         self.num_layers = config.num_layers
+        self.num_kv_heads = config.num_kv_heads
+        self.head_dim = config.head_dim
         previous_dtype = torch.get_default_dtype()
         torch.set_default_dtype(self.dtype)
         try:
@@ -40,15 +58,41 @@ class LLM:
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
 
+    def create_kv_cache(
+        self,
+        max_seq_len: int | None = None,
+        batch_size: int = 1,
+    ) -> PreallocatedKVCache:
+        if max_seq_len is None:
+            max_seq_len = self.max_seq_len
+        if max_seq_len > self.config.max_position_embeddings:
+            raise ValueError(
+                f"max_seq_len ({max_seq_len}) exceeds model maximum "
+                f"position embeddings ({self.config.max_position_embeddings})"
+            )
+        return PreallocatedKVCache(
+            num_layers=self.num_layers,
+            num_kv_heads=self.num_kv_heads,
+            head_dim=self.head_dim,
+            max_seq_len=max_seq_len,
+            batch_size=batch_size,
+            device=self.device,
+            dtype=self.dtype,
+        )
+
     @torch.no_grad()
     def generate(
         self,
         prompts: list[str] | list[list[int]],
         sampling_params: SamplingParams | list[SamplingParams] | None = None,
         use_kv_cache: bool = True,
+        max_seq_len: int | None = None,
     ) -> list[dict]:
         if sampling_params is None:
             sampling_params = SamplingParams()
+
+        if max_seq_len is None:
+            max_seq_len = self.max_seq_len
 
         # Normalize to per-request sampling params list
         if isinstance(sampling_params, SamplingParams):
@@ -74,12 +118,21 @@ class LLM:
             else:
                 input_ids = torch.tensor([prompt], device=self.device)
 
+            if input_ids.shape[1] + sp.max_tokens > max_seq_len:
+                raise ValueError(
+                    f"prompt length ({input_ids.shape[1]}) + max_tokens "
+                    f"({sp.max_tokens}) exceeds max_seq_len ({max_seq_len}). "
+                    "Increase --max-seq-len or reduce --max-tokens."
+                )
+
             generated = input_ids.clone()
             model_input = input_ids
-            from ..engine import DynamicKVCache
 
             if use_kv_cache:
-                kv_cache = DynamicKVCache(self.num_layers)
+                kv_cache = self.create_kv_cache(
+                    max_seq_len=max_seq_len,
+                    batch_size=input_ids.shape[0],
+                )
             else:
                 kv_cache = None
 

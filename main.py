@@ -38,6 +38,12 @@ def main() -> None:
     )
     parser.add_argument("--prompt", type=str, default="你好")
     parser.add_argument("--max-tokens", type=int, default=128)
+    parser.add_argument(
+        "--max-seq-len",
+        type=int,
+        default=4096,
+        help="预分配 KV cache 的最大序列长度，需 >= prompt_len + max_tokens",
+    )
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--top-k", type=int, default=50)
     parser.add_argument("--top-p", type=float, default=0.9)
@@ -71,7 +77,12 @@ def main() -> None:
     print(f"Dtype : {dtype}")
     print(f"Use KV cache: {args.use_kv_cache}")
 
-    llm = LLM(args.model, dtype=dtype, device=str(device))
+    llm = LLM(
+        args.model,
+        dtype=dtype,
+        device=str(device),
+        max_seq_len=args.max_seq_len,
+    )
     sampling_params = SamplingParams(
         temperature=args.temperature,
         top_k=args.top_k,
@@ -81,6 +92,7 @@ def main() -> None:
 
     print(f"\nPrompt: {args.prompt}")
     print(f"Max tokens: {args.max_tokens}")
+    print(f"Max seq len: {args.max_seq_len}")
 
     t0 = time.perf_counter()
     results = llm.generate(

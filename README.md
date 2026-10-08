@@ -16,14 +16,14 @@ LLM_INFER 是一个基于 PyTorch 的轻量级 Qwen3 推理引擎。
 - 模块化组件：
   - `layers/`：基础算子和 Transformer 层
   - `models/`：Qwen3 模型、配置解析和权重加载
-  - `engine/`：采样器 `Sampler` 和 `DynamicKVCache`
+  - `engine/`：采样器 `Sampler`、`DynamicKVCache` 和 `PreallocatedKVCache`
   - `llm/`：统一推理入口 `LLM`
 - 支持从 HuggingFace 加载 Qwen3 配置和 Tokenizer
 - 支持直接加载 safetensors 权重
 - 支持 weight tying
 - 支持 greedy、temperature、top-k、top-p 采样
 - 支持 CPU / GPU、bfloat16 / float16 / float32
-- 支持 KV cache，可通过 `--use-kv-cache` / `--no-use-kv-cache` 切换
+- 支持 KV cache：默认使用预分配 `PreallocatedKVCache`，最大序列长度可通过 `--max-seq-len` 指定
 - 提供 benchmark 脚本和 pre-commit 格式化配置
 
 ## 环境要求
@@ -151,6 +151,7 @@ results = llm.generate(
 | `--model` | 无，必填 | HuggingFace 模型名或本地模型目录 |
 | `--prompt` | `你好` | 输入提示词 |
 | `--max-tokens` | `128` | 最多生成 token 数 |
+| `--max-seq-len` | `4096` | 预分配 KV cache 的最大序列长度，需 `>= prompt_len + max_tokens` |
 | `--temperature` | `0.7` | `0` 表示 greedy，值越大越随机 |
 | `--top-k` | `50` | top-k 采样，`-1` 表示关闭 |
 | `--top-p` | `0.9` | top-p 采样，`1.0` 表示关闭 |
@@ -192,7 +193,14 @@ Decode 第 t 步:
 
 启用 KV cache 后，decode 阶段只计算新 token 的 Q/K/V、MLP 和 LM Head，历史 K/V 直接复用；关闭后每一步重新计算完整序列。
 
-> 当前 `DynamicKVCache` 使用 `torch.cat` 动态拼接，实现简单、便于理解，但不是高性能实现。benchmark 中 128 / 512 token 场景下，KV cache 暂未体现明显加速，具体原因见 [docs/benchmark.md](docs/benchmark.md)。
+当前默认使用 `PreallocatedKVCache`：
+
+- 初始化时一次性分配 `(batch, num_kv_heads, max_seq_len, head_dim)` 的 K/V
+- decode 时按当前位置原地写入，不再每步执行 `torch.cat`
+- `max_seq_len` 可通过 `LLM(..., max_seq_len=...)` 或命令行 `--max-seq-len` 指定
+- 如果实际长度超过 `max_seq_len`，会直接报错，提示增大 `max_seq_len` 或减小 `--max-tokens`
+
+旧版 `DynamicKVCache` 仍保留在 `engine/kv_cache.py`，用于对比和教学。长序列下预分配版本通常能获得更明显的收益，具体数据见 [docs/benchmark.md](docs/benchmark.md)。
 
 ## Benchmark
 
@@ -204,13 +212,26 @@ A800 `cuda:0` 测试结果（Qwen3-0.6B，128 token，bfloat16，1 warmup + 3 ru
 |---|---:|---|---:|---:|
 | v0.1 | 751,632,384 | 否 | 36.66 | 36.55 |
 | v0.2 | 596,049,920 | 否 | 43.73 | 43.61 |
-| 当前 | 596,049,920 | 否 | 42.92 | 42.80 |
-| 当前 | 596,049,920 | 是 | 43.54 | 43.39 |
+| 当前 | 596,049,920 | 否 | 44.21 | 44.08 |
+| 当前 | 596,049,920 | 是 | 42.98 | 42.84 |
 
 - v0.1 → v0.2：overall throughput 提升约 `+19.3%`
-- v0.1 → 当前 KV cache：overall throughput 提升约 `+18.7%`
-- 当前 no-cache → 当前 KV cache：128 token 下差异约 `1.4%`
-- 512 token 下，当前 cache 实现暂时略慢于 no-cache，原因主要是 `torch.cat`、Python 循环和 kernel launch 开销
+- v0.1 → 当前 KV cache：overall throughput 提升约 `+17.2%`
+
+### KV cache 随序列长度的收益
+
+| 生成长度 | no-cache Decode tok/s | KV cache Decode tok/s | 变化 |
+|---:|---:|---:|---:|
+| 128 token | 44.21 | 42.98 | 约 `-2.8%` |
+| 512 token | 42.36 | 42.74 | 约 `+0.9%` |
+| 1024 token | 16.76 | 42.93 | 约 `+156%`（`2.56x`） |
+
+结论：
+
+- 128 token：序列太短，Python / kernel launch 开销占主导，cache 反而略慢
+- 512 token：cache 与 no-cache 基本持平
+- 1024 token：cache 明显领先，因为 no-cache 每一步都要重新计算完整序列
+- `PreallocatedKVCache` 避免了每步 `torch.cat`，但优势需要足够长的序列才能体现
 
 GPU 测试环境为 NVIDIA A800-SXM4-80GB × 8，实际 benchmark 使用 `cuda:0`。
 
@@ -240,6 +261,29 @@ uv run python benchmark.py \
   --ignore-eos \
   --no-use-kv-cache \
   --json-out docs/benchmark-cuda-current-nokv.json
+
+# 长序列 KV cache 对比：1024 token
+uv run python benchmark.py \
+  --model /mnt/afs/models/Qwen/Qwen3-0.6B \
+  --device cuda:0 \
+  --dtype bfloat16 \
+  --max-new-tokens 1024 \
+  --warmup-runs 0 \
+  --runs 1 \
+  --ignore-eos \
+  --use-kv-cache \
+  --json-out docs/benchmark-cuda-current-kv-1024.json
+
+uv run python benchmark.py \
+  --model /mnt/afs/models/Qwen/Qwen3-0.6B \
+  --device cuda:0 \
+  --dtype bfloat16 \
+  --max-new-tokens 1024 \
+  --warmup-runs 0 \
+  --runs 1 \
+  --ignore-eos \
+  --no-use-kv-cache \
+  --json-out docs/benchmark-cuda-current-nokv-1024.json
 ```
 
 v0.1 / v0.2 的复现命令见 [docs/benchmark.md](docs/benchmark.md)。
@@ -259,7 +303,7 @@ LLM_INFER/
 │   ├── core.py                   # SamplingParams
 │   ├── engine/
 │   │   ├── sample.py             # Sampler
-│   │   └── kv_cache.py           # DynamicKVCache
+│   │   └── kv_cache.py           # DynamicKVCache / PreallocatedKVCache
 │   ├── layers/                   # 基础层和算子
 │   │   ├── activation.py
 │   │   ├── attention.py
@@ -326,8 +370,8 @@ Qwen3ForCausalLM
 `src/python/models/qwen3.py` 中的 `Qwen3Attention` 在每层：
 
 1. 计算当前 token 的 Q/K/V
-2. 通过 `DynamicKVCache.update()` 将 K/V 追加到缓存
-3. 使用完整缓存的 K/V 做 attention
+2. 通过 `PreallocatedKVCache.update()` 将 K/V 原地写入预分配缓存
+3. 使用完整有效前缀 K/V 做 attention
 
 `Qwen3Model.forward()` 会根据 `past_len` 生成正确的 `position_ids` 和 causal mask：
 
@@ -351,8 +395,7 @@ uv run pre-commit run --all-files
 
 ## 已知限制
 
-- 当前 `DynamicKVCache` 使用 `torch.cat` 动态拼接，长序列下拼接和 Python/launch 开销可能掩盖计算收益
-- 没有预分配 KV cache、PagedAttention、continuous batching
+- 当前 KV cache 仍是单请求、batch=1 的实现，尚未使用 PagedAttention / continuous batching / CUDA Graphs；Python 层循环和 kernel launch 开销仍然存在
 - 当前只实现了 Qwen3 模型
 - `LLM.generate()` 支持传入多个 prompt，但内部逐条生成，没有 batch 并行
 - benchmark 结果依赖硬件、PyTorch 版本、线程数、驱动和功耗状态

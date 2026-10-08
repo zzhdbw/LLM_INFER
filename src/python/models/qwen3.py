@@ -20,7 +20,7 @@ from ..layers import (
 from .base import BaseLLMModel
 
 if TYPE_CHECKING:
-    from ..engine.kv_cache import DynamicKVCache
+    from ..engine.kv_cache import KVCache
     from .config import ModelConfig
 
 
@@ -46,7 +46,7 @@ class Qwen3Attention(BaseOP):
         hidden_states: torch.Tensor,
         position_embeddings: tuple[torch.Tensor, torch.Tensor],
         attention_mask: torch.Tensor,
-        kv_cache: DynamicKVCache | None = None,
+        kv_cache: KVCache | None = None,
     ) -> torch.Tensor:
         B, S, _ = hidden_states.shape
 
@@ -117,7 +117,7 @@ class Qwen3DecoderLayer(BaseOP):
         hidden_states: torch.Tensor,
         attention_mask: torch.Tensor,
         position_embeddings: tuple[torch.Tensor, torch.Tensor],
-        kv_cache: DynamicKVCache | None = None,
+        kv_cache: KVCache | None = None,
     ) -> torch.Tensor:
         residual = hidden_states
         hidden_states = self.input_layernorm.forward(hidden_states)
@@ -145,7 +145,7 @@ class Qwen3Model(BaseOP):
         )
 
     def forward(
-        self, input_ids: torch.Tensor, kv_cache: DynamicKVCache | None = None
+        self, input_ids: torch.Tensor, kv_cache: KVCache | None = None
     ) -> torch.Tensor:
         B, S = input_ids.shape
         hidden_states = self.embed_tokens.forward(input_ids)
@@ -200,7 +200,7 @@ class Qwen3ForCausalLM(BaseLLMModel):
         )
 
     def forward(
-        self, input_ids: torch.Tensor, kv_cache: DynamicKVCache | None = None
+        self, input_ids: torch.Tensor, kv_cache: KVCache | None = None
     ) -> torch.Tensor:
         hidden_states = self.model.forward(input_ids, kv_cache)
         return self.lm_head.forward(hidden_states)

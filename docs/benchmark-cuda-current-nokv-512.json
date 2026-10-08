@@ -14,27 +14,42 @@
   "top_p": 1.0,
   "ignore_eos": true,
   "use_kv_cache": false,
-  "warmup_runs": 0,
+  "max_seq_len": 4096,
+  "warmup_runs": 1,
   "runs": [
     {
       "input_tokens": 13,
       "generated_tokens": 512,
-      "total_s": 12.651995427906513,
-      "prefill_ms": 560.2781027555466,
-      "decode_avg_ms": 23.573287910327984,
-      "decode_tokens_per_s": 42.42089621965197,
-      "overall_tokens_per_s": 40.467924835846944,
+      "total_s": 12.131826482713223,
+      "prefill_ms": 23.56811985373497,
+      "decode_avg_ms": 23.625828872513164,
+      "decode_tokens_per_s": 42.32655731979093,
+      "overall_tokens_per_s": 42.20304343534377,
       "use_kv_cache": false,
+      "max_seq_len": 4096,
+      "output": "你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要"
+    },
+    {
+      "input_tokens": 13,
+      "generated_tokens": 512,
+      "total_s": 12.111569095402956,
+      "prefill_ms": 23.713737726211548,
+      "decode_avg_ms": 23.58602988305857,
+      "decode_tokens_per_s": 42.39797901376706,
+      "overall_tokens_per_s": 42.27363077128741,
+      "use_kv_cache": false,
+      "max_seq_len": 4096,
       "output": "你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要"
     }
   ],
   "summary": {
-    "total_s": 12.651995427906513,
-    "prefill_ms": 560.2781027555466,
-    "decode_avg_ms": 23.573287910327984,
-    "decode_tokens_per_s": 42.42089621965197,
-    "overall_tokens_per_s": 40.467924835846944,
+    "total_s": 12.12169778905809,
+    "prefill_ms": 23.64092878997326,
+    "decode_avg_ms": 23.605929377785866,
+    "decode_tokens_per_s": 42.362268166778996,
+    "overall_tokens_per_s": 42.23833710331559,
     "use_kv_cache": false,
+    "max_seq_len": 4096,
     "generated_tokens": 512
   }
 }
