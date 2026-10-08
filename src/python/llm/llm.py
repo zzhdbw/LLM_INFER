@@ -24,7 +24,7 @@ class LLM:
         model_path = _resolve_model_path(model_path)
         hf_config = AutoConfig.from_pretrained(model_path)
         config = ModelConfig.from_hf(hf_config)
-
+        self.num_layers = config.num_layers
         previous_dtype = torch.get_default_dtype()
         torch.set_default_dtype(self.dtype)
         try:
@@ -45,6 +45,7 @@ class LLM:
         self,
         prompts: list[str] | list[list[int]],
         sampling_params: SamplingParams | list[SamplingParams] | None = None,
+        use_kv_cache: bool = True,
     ) -> list[dict]:
         if sampling_params is None:
             sampling_params = SamplingParams()
@@ -74,8 +75,16 @@ class LLM:
                 input_ids = torch.tensor([prompt], device=self.device)
 
             generated = input_ids.clone()
+            model_input = input_ids
+            from ..engine import DynamicKVCache
+
+            if use_kv_cache:
+                kv_cache = DynamicKVCache(self.num_layers)
+            else:
+                kv_cache = None
+
             for _ in range(sp.max_tokens):
-                logits = self.model.forward(generated)
+                logits = self.model.forward(model_input, kv_cache)
                 next_logits = logits[:, -1, :]
                 next_token = sampler.sample(next_logits)
 
@@ -85,6 +94,11 @@ class LLM:
                     and next_token.item() == self.tokenizer.eos_token_id
                 ):
                     break
+
+                if use_kv_cache:
+                    model_input = next_token
+                else:
+                    model_input = generated
 
             new_token_ids = generated[0][input_ids.shape[1] :].tolist()
             text = self.tokenizer.decode(new_token_ids, skip_special_tokens=True)

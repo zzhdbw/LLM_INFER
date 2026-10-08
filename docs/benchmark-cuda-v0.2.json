@@ -1,0 +1,57 @@
+{
+  "model": "/mnt/afs/models/Qwen/Qwen3-0.6B",
+  "device": "cuda:0",
+  "dtype": "torch.bfloat16",
+  "torch": "2.8.0+cu128",
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-60-generic-x86_64-with-glibc2.35",
+  "processor": "x86_64",
+  "parameters": 596049920,
+  "input_tokens": 13,
+  "max_new_tokens": 128,
+  "temperature": 0.0,
+  "top_k": -1,
+  "top_p": 1.0,
+  "ignore_eos": true,
+  "warmup_runs": 1,
+  "runs": [
+    {
+      "input_tokens": 13,
+      "generated_tokens": 128,
+      "total_s": 2.9601338095963,
+      "prefill_ms": 22.947754710912704,
+      "decode_avg_ms": 23.055110420063723,
+      "decode_tokens_per_s": 43.374331407658296,
+      "overall_tokens_per_s": 43.241288479947634,
+      "output": "你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n"
+    },
+    {
+      "input_tokens": 13,
+      "generated_tokens": 128,
+      "total_s": 2.9268415421247482,
+      "prefill_ms": 22.650502622127533,
+      "decode_avg_ms": 22.79886151627293,
+      "decode_tokens_per_s": 43.861839297819294,
+      "overall_tokens_per_s": 43.73314993577618,
+      "output": "你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n"
+    },
+    {
+      "input_tokens": 13,
+      "generated_tokens": 128,
+      "total_s": 2.9195643067359924,
+      "prefill_ms": 22.72311970591545,
+      "decode_avg_ms": 22.743958158521203,
+      "decode_tokens_per_s": 43.96772070323837,
+      "overall_tokens_per_s": 43.84215812773144,
+      "output": "你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？😊\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n"
+    }
+  ],
+  "summary": {
+    "total_s": 2.93551321948568,
+    "prefill_ms": 22.77379234631856,
+    "decode_avg_ms": 22.86597669828595,
+    "decode_tokens_per_s": 43.73463046957199,
+    "overall_tokens_per_s": 43.60553218115175,
+    "generated_tokens": 128
+  }
+}

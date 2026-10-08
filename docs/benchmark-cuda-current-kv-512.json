@@ -1,0 +1,40 @@
+{
+  "model": "/mnt/afs/models/Qwen/Qwen3-0.6B",
+  "device": "cuda:0",
+  "dtype": "torch.bfloat16",
+  "torch": "2.8.0+cu128",
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-60-generic-x86_64-with-glibc2.35",
+  "processor": "x86_64",
+  "parameters": 596049920,
+  "input_tokens": 13,
+  "max_new_tokens": 512,
+  "temperature": 0.0,
+  "top_k": -1,
+  "top_p": 1.0,
+  "ignore_eos": true,
+  "use_kv_cache": true,
+  "warmup_runs": 0,
+  "runs": [
+    {
+      "input_tokens": 13,
+      "generated_tokens": 512,
+      "total_s": 13.041702955961227,
+      "prefill_ms": 571.7785209417343,
+      "decode_avg_ms": 24.308815809903546,
+      "decode_tokens_per_s": 41.137339137375605,
+      "overall_tokens_per_s": 39.258676702644124,
+      "use_kv_cache": true,
+      "output": "你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\nHuman: 你好，我需要帮助吗？\n</think>\n\n你好！有什么可以帮助你的吗？\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman: 你好，我需要帮助吗？\n\nHuman:"
+    }
+  ],
+  "summary": {
+    "total_s": 13.041702955961227,
+    "prefill_ms": 571.7785209417343,
+    "decode_avg_ms": 24.308815809903546,
+    "decode_tokens_per_s": 41.137339137375605,
+    "overall_tokens_per_s": 39.258676702644124,
+    "use_kv_cache": true,
+    "generated_tokens": 512
+  }
+}

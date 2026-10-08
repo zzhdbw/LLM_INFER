@@ -53,6 +53,12 @@ def main() -> None:
         default=None,
         help="Device, e.g. cuda:0, cuda:1, cpu. Default: auto.",
     )
+    parser.add_argument(
+        "--use-kv-cache",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="启用 KV cache。使用 --no-use-kv-cache 关闭。",
+    )
     args = parser.parse_args()
 
     device = resolve_device(args.device)
@@ -63,6 +69,7 @@ def main() -> None:
     print("=" * 60)
     print(f"Device: {device}")
     print(f"Dtype : {dtype}")
+    print(f"Use KV cache: {args.use_kv_cache}")
 
     llm = LLM(args.model, dtype=dtype, device=str(device))
     sampling_params = SamplingParams(
@@ -76,7 +83,9 @@ def main() -> None:
     print(f"Max tokens: {args.max_tokens}")
 
     t0 = time.perf_counter()
-    results = llm.generate([args.prompt], sampling_params)
+    results = llm.generate(
+        [args.prompt], sampling_params, use_kv_cache=args.use_kv_cache
+    )
     elapsed = time.perf_counter() - t0
 
     output = results[0]

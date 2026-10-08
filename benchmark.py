@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.python import LLM, SamplingParams
-from src.python.engine import Sampler
+from src.python.engine import DynamicKVCache, Sampler
 
 _DTYPE_MAP = {
     "bfloat16": torch.bfloat16,
@@ -60,8 +60,11 @@ def run_generate(
     input_ids: torch.Tensor,
     sampling_params: SamplingParams,
     device: torch.device,
+    use_kv_cache: bool,
 ) -> dict[str, Any]:
     generated = input_ids.clone()
+    model_input = input_ids
+    kv_cache = DynamicKVCache(llm.num_layers) if use_kv_cache else None
     sampler = Sampler(sampling_params)
     step_times: list[float] = []
 
@@ -71,7 +74,7 @@ def run_generate(
     for _ in range(sampling_params.max_tokens):
         synchronize(device)
         step_start = time.perf_counter()
-        logits = llm.model.forward(generated)
+        logits = llm.model.forward(model_input, kv_cache)
         synchronize(device)
         step_times.append(time.perf_counter() - step_start)
 
@@ -84,6 +87,11 @@ def run_generate(
             and next_token.item() == llm.tokenizer.eos_token_id
         ):
             break
+
+        if use_kv_cache:
+            model_input = next_token
+        else:
+            model_input = generated
 
     synchronize(device)
     total_s = time.perf_counter() - t0
@@ -105,6 +113,7 @@ def run_generate(
         "decode_avg_ms": decode_avg_ms,
         "decode_tokens_per_s": decode_tokens_per_s,
         "overall_tokens_per_s": generated_tokens / total_s if total_s > 0 else 0.0,
+        "use_kv_cache": use_kv_cache,
         "output": output_text,
     }
 
@@ -131,6 +140,12 @@ def main() -> None:
         "--ignore-eos",
         action="store_true",
         help="继续生成直到 max_new_tokens，即使遇到 EOS。",
+    )
+    parser.add_argument(
+        "--use-kv-cache",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="启用 KV cache。使用 --no-use-kv-cache 关闭。",
     )
     parser.add_argument("--warmup-runs", type=int, default=1)
     parser.add_argument("--runs", type=int, default=1)
@@ -165,6 +180,7 @@ def main() -> None:
     print(f"warmup_runs  : {args.warmup_runs}")
     print(f"runs         : {args.runs}")
     print(f"ignore_eos   : {args.ignore_eos}")
+    print(f"use_kv_cache : {args.use_kv_cache}")
 
     llm = LLM(args.model, dtype=dtype, device=str(device))
     num_params = sum(p.numel() for p in llm.model.state_dict().values())
@@ -174,15 +190,17 @@ def main() -> None:
     print(f"input_tokens : {input_ids.shape[1]}")
 
     for _ in range(args.warmup_runs):
-        run_generate(llm, input_ids, sampling_params, device)
+        run_generate(llm, input_ids, sampling_params, device, args.use_kv_cache)
 
     runs = [
-        run_generate(llm, input_ids, sampling_params, device)
+        run_generate(llm, input_ids, sampling_params, device, args.use_kv_cache)
         for _ in range(args.runs)
     ]
 
     print()
-    print("| Run | Total (s) | Generated | Prefill (ms) | Decode avg (ms/tok) | Decode tok/s | Overall tok/s |")
+    print(
+        "| Run | Total (s) | Generated | Prefill (ms) | Decode avg (ms/tok) | Decode tok/s | Overall tok/s |"
+    )
     print("|---:|---:|---:|---:|---:|---:|---:|")
     for index, run in enumerate(runs, start=1):
         print(
@@ -201,6 +219,7 @@ def main() -> None:
         "decode_avg_ms": mean([run["decode_avg_ms"] for run in runs]),
         "decode_tokens_per_s": mean([run["decode_tokens_per_s"] for run in runs]),
         "overall_tokens_per_s": mean([run["overall_tokens_per_s"] for run in runs]),
+        "use_kv_cache": args.use_kv_cache,
         "generated_tokens": mean([run["generated_tokens"] for run in runs]),
     }
 
@@ -232,6 +251,7 @@ def main() -> None:
             "top_k": args.top_k,
             "top_p": args.top_p,
             "ignore_eos": args.ignore_eos,
+            "use_kv_cache": args.use_kv_cache,
             "warmup_runs": args.warmup_runs,
             "runs": runs,
             "summary": summary,
